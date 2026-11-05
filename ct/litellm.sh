@@ -7,6 +7,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # Source: https://github.com/BerriAI/litellm
 
 APP="LiteLLM"
+SCRIPT_SLUG="litellm-test"
 var_tags="${var_tags:-ai;interface}"
 var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-2048}"

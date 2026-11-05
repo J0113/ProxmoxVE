@@ -28,7 +28,7 @@ PYTHON_VERSION="3.13" setup_uv
 msg_info "Installing LiteLLM and Generating the Prisma Client"
 venv_path="/opt/litellm/.venv"
 $STD uv venv --python 3.13 "$venv_path"
-$STD uv pip install --python "$venv_path/bin/python" 'litellm[proxy,extra-proxy]==1.108.0' 'prisma==0.11.0'
+$STD uv pip install --python "$venv_path/bin/python" "litellm[proxy,extra-proxy]==${var_litellm_version:-1.108.0}" "prisma==${var_litellm_prisma_version:-0.11.0}"
 schema_path=$("$venv_path/bin/python" -c 'from importlib.util import find_spec; from pathlib import Path; print(Path(find_spec("litellm").origin).parent / "proxy" / "schema.prisma")')
 $STD env "PATH=$venv_path/bin:$PATH" "$venv_path/bin/prisma" generate --schema="$schema_path"
 msg_ok "Installed LiteLLM and Generated the Prisma Client"
@@ -121,4 +121,5 @@ msg_ok "Configured LiteLLM HTTPS"
 
 motd_ssh
 customize
+write_update_entrypoint "litellm-test" "litellm" "https://raw.githubusercontent.com/J0113/ProxmoxVE/codex/test-litellm"
 cleanup_lxc

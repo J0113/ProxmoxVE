@@ -16,6 +16,7 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 #var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
 var_unprivileged="${var_unprivileged:-1}"
+export var_litellm_http="${var_litellm_http:-no}"
 export var_litellm_version="1.108.0"
 export var_litellm_prisma_version="0.11.0"
 

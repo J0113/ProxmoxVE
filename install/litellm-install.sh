@@ -83,41 +83,41 @@ done
 msg_ok "Started LiteLLM with PostgreSQL"
 
 create_self_signed_cert "litellm"
-msg_info "Configuring LiteLLM HTTPS"
-cat <<'EOF' >/etc/nginx/sites-available/litellm
-map $http_upgrade $litellm_connection_upgrade {
+msg_info "Configuring the LiteLLM Web Proxy"
+http_redirect='    if ($scheme = http) { return 301 https://$host$request_uri; }'
+if [[ "${var_litellm_http:-no}" == "yes" ]]; then
+  http_redirect=""
+fi
+cat <<EOF >/etc/nginx/sites-available/litellm
+map \$http_upgrade \$litellm_connection_upgrade {
     default upgrade;
     '' close;
 }
 
 server {
     listen 80;
-    server_name _;
-    return 301 https://$host$request_uri;
-}
-
-server {
     listen 443 ssl;
     server_name _;
     ssl_certificate /etc/ssl/litellm/litellm.crt;
     ssl_certificate_key /etc/ssl/litellm/litellm.key;
     client_max_body_size 0;
+${http_redirect}
 
     location / {
         proxy_pass http://127.0.0.1:4000;
         proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $litellm_connection_upgrade;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Forwarded-For \$remote_addr;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection \$litellm_connection_upgrade;
         proxy_buffering off;
         proxy_read_timeout 600s;
     }
 }
 EOF
 nginx_enable_site "litellm"
-msg_ok "Configured LiteLLM HTTPS"
+msg_ok "Configured the LiteLLM Web Proxy"
 
 motd_ssh
 customize

@@ -16,7 +16,7 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 #var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
 var_unprivileged="${var_unprivileged:-1}"
-export var_litellm_http="${var_litellm_http:-no}"
+export var_litellm_http="${var_litellm_http:-yes}"
 export var_litellm_version="1.108.0"
 export var_litellm_prisma_version="0.11.0"
 
@@ -163,4 +163,7 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}LiteLLM setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}https://${IP}/ui${CL}"
+if [[ "$var_litellm_http" == "yes" ]]; then
+  echo -e "${INFO}${YW}HTTP access is also enabled on port 80.${CL}"
+fi
 echo -e "${INFO}${YW}Log in to LiteLLM as admin with LITELLM_MASTER_KEY from /opt/litellm/.env inside the container.${CL}"

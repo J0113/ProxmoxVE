@@ -85,7 +85,7 @@ msg_ok "Started LiteLLM with PostgreSQL"
 create_self_signed_cert "litellm"
 msg_info "Configuring the LiteLLM Web Proxy"
 http_redirect='    if ($scheme = http) { return 301 https://$host$request_uri; }'
-if [[ "${var_litellm_http:-no}" == "yes" ]]; then
+if [[ "${var_litellm_http:-yes}" == "yes" ]]; then
   http_redirect=""
 fi
 cat <<EOF >/etc/nginx/sites-available/litellm
